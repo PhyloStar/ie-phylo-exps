@@ -1,4 +1,4 @@
-# ie-phylo-exps
+# Indo-European tree prior experiments
 
 [![DOI](https://zenodo.org/badge/88611866.svg)](https://zenodo.org/badge/latestdoi/88611866)
 
