@@ -1,0 +1,60 @@
+execute medium1.nex;
+lset rates=gamma coding=noabsencesites;
+
+[relaxed clock model]
+prset clockratepr = exp(83000);
+prset clockvarpr = igr [tk02];
+prset igrvarpr = exp(200) [tk02varpr = exp(1)];
+
+
+	taxset fossils = Ancient_Greek Avestan Cornish Gothic Hittite Latin Old_Church_Slavic Old_English Old_High_German Old_Irish Old_West_Norse Tocharian_B Vedic_Sanskrit Classical_Armenian;
+
+[[constraints]
+	constraint root = 1-.;
+	constraint Armenian = Armenian_List Armenian_Mod;
+	constraint Armenian_fossil = Armenian_List Armenian_Mod Classical_Armenian;
+	constraint Balto-Slavic = Bulgarian Byelorussian Czech Latvian Lithuanian_ST Lower_Sorbian Macedonian Polish Russian Serbian Slovak Slovenian Ukrainian Upper_Sorbian;
+	constraint Balto-Slavic_fossil = Bulgarian Byelorussian Czech Latvian Lithuanian_ST Lower_Sorbian Macedonian Polish Russian Serbian Slovak Slovenian Ukrainian Upper_Sorbian Old_Church_Slavonic Old_Prussian;
+	constraint Germanic = Afrikaans Danish Dutch_List English Faroese Flemish Frisian German Icelandic_ST Luxembourgish Norwegian Schwyzerdutsch Swedish;
+	constraint Germanic_fossil = Afrikaans Danish Dutch_List English Faroese Flemish Frisian German Icelandic_ST Luxembourgish Norwegian Schwyzerdutsch Swedish Gothic Old_English Old_High_German Old_Norse;
+	constraint Indo-Aryan = Assamese Bengali Bihari Gujarati Gypsy_Gk Hindi Kashmiri Lahnda Marathi Marwari Nepali Oriya Panjabi_ST Sindhi Singhalese Urdu;
+	constraint Indo-Aryan_fossil = Assamese Bengali Bihari Gujarati Gypsy_Gk Hindi Kashmiri Lahnda Marathi Marwari Nepali Oriya Panjabi_ST Sindhi Singhalese Urdu Vedic_Sanskrit;
+	constraint Indo-Iranian = Assamese Baluchi Bengali Bihari Digor_Ossetic Gujarati Gypsy_Gk Hindi Kashmiri Kurdish Lahnda Marathi Marwari Nepali Oriya Panjabi_ST Pashto Persian Sariqoli Shughni Sindhi Singhalese Tadzik Urdu Wakhi Waziri Zazaki;
+	constraint Indo-Iranian_fossil = Assamese Baluchi Bengali Bihari Digor_Ossetic Gujarati Gypsy_Gk Hindi Kashmiri Kurdish Lahnda Marathi Marwari Nepali Oriya Panjabi_ST Pashto Persian Sariqoli Shughni Sindhi Singhalese Tadzik Urdu Wakhi Waziri Zazaki Vedic_Sanskrit Old_Persian Avestan;
+	constraint Iranian = Baluchi Digor_Ossetic Kurdish Pashto Persian Sariqoli Shughni Tadzik Wakhi Waziri Zazaki;
+	constraint Iranian_fossil = Baluchi Digor_Ossetic Kurdish Pashto Persian Sariqoli Shughni Tadzik Wakhi Waziri Zazaki Old_Persian Avestan;
+	constraint Italo-Celtic = Breton_ST Catalan French Friulian Irish_B Italian Ladin Portuguese_ST Provencal Romansh Rumanian_List Sardinian_C Sardinian_N Scots_Gaelic Spanish Vlach Walloon Welsh_N;
+	constraint Italo-Celtic_fossil = Breton_ST Catalan French Friulian Irish_B Italian Ladin Portuguese_ST Provencal Romansh Rumanian_List Sardinian_C Sardinian_N Scots_Gaelic Spanish Vlach Walloon Welsh_N Old_Irish Oscan Umbrian Latin;
+	constraint Romance = Catalan French Friulian Italian Ladin Portuguese_ST Provencal Romansh Rumanian_List Sardinian_C Sardinian_N Spanish Vlach;
+	constraint Romance_fossil = Catalan French Friulian Italian Ladin Portuguese_ST Provencal Romansh Rumanian_List Sardinian_C Sardinian_N Spanish Vlach Latin Oscan Umbrian;
+	constraint Celtic = Breton_ST Irish_B Scots_Gaelic Welsh_N;
+	constraint Celtic_fossil = Breton_ST Irish_B Scots_Gaelic Welsh_N Old_Irish;
+	constraint Nuclear-Indo-European = Nepali Assamese Oriya Bengali Bihari Marwari Hindi Urdu Sindhi Lahnda Panjabi_ST Gujarati Marathi Kashmiri Singhalese Gypsy_Gk Wakhi Baluchi Kurdish Zazaki Tadzik Persian Waziri Pashto Shughni Sariqoli Digor_Ossetic Sardinian_C Sardinian_N Rumanian_List Vlach Catalan Portuguese_ST Spanish French Provencal Walloon Ladin Romansh Friulian Italian Breton_ST Welsh_N Irish_B Scots_Gaelic Icelandic_ST Faroese Norwegian Swedish Danish English Frisian Dutch_List Flemish Afrikaans German Luxembourgish Schwyzerdutsch Serbian Bulgarian Macedonian Slovenian Russian Byelorussian Ukrainian Polish Slovak Czech Upper_Sorbian Lower_Sorbian Latvian Lithuanian_ST Albanian_T Albanian_K Armenian_Mod Armenian_List Greek_Mod Ancient_Greek Avestan Gothic Latin Old_Church_Slavonic Old_English Old_High_German Old_Irish Old_Norse Old_Persian Old_Prussian Oscan Tocharian_A Tocharian_B Umbrian Vedic_Sanskrit Classical_Armenian;]
+
+[Total-evidence Dating]
+	calibrate Hittite=Uniform(3500,3600) Old_Irish=uniform(1100,1300) Classical_Armenian=uniform(1300,1600) Ancient_Greek=uniform(2400,2500) Vedic_Sanskrit=uniform(3000,3500) Old_English=uniform(950,1050) Latin=uniform(2100,2200) Old_High_German=uniform(1000,1100) Tocharian_B=uniform(1200,1500) Avestan=uniform(2450,2550) Gothic=uniform(1625,1675) Old_West_Norse=uniform(750,850) Old_Church_Slavic=uniform(950,1050) Cornish=uniform(200,400);
+	prset nodeagepr = calibrated;
+	prset brlenspr = [clock:fossilization] clock:uniform;
+	prset sampleprob = 0.175;
+	prset samplestrat = random;
+	prset speciationpr = exp(1);
+	prset extinctionpr = beta(1,1);
+	prset fossilizationpr = beta(1,1);
+	prset treeagepr = uniform(4000,25000);
+	[prset topologypr = constraints(Armenian_fossil,Balto-Slavic_fossil,Celtic_fossil,Germanic_fossil,Indo-Aryan_fossil,Indo-Iranian_fossil,Iranian_fossil,Italo-Celtic_fossil,Romance_fossil,Nuclear-Indo-European);]
+
+[prset shapepr = exponential(20);]
+
+showmodel;
+showparams;
+
+mcmcp nrun = 2 nchain = 3 ngen = 50000000 samplefreq=1000;
+mcmcp printfr = 10000 diagnfr = 10000;
+
+mcmc;
+sump;
+sumt;
+
+[delete fossils;
+sumt output = my_IE_FBD_Full_remove_fossils.t;]
+
