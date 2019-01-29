@@ -4,6 +4,6 @@
 
 A repository that presents the results of MCMC analyses with three different tree priors: Fossilized Birth-Death prior (FBD), Uniform prior, and Coalescent prior for five datasets of Indo-European from Chang et al. (2015).
 
-The online version is the paper can be found [here]:(https://brill.com/view/journals/ldc/8/2/article-p182_2.xml)
+The online version is the paper can be found [here] (https://brill.com/view/journals/ldc/8/2/article-p182_2.xml)
 
 The author copy of the paper can be found [here](http://phylostar.github.io/PhyloStar.github.io/publications/ie_dating_ldc.pdf).
